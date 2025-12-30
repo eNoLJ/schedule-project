@@ -1,6 +1,7 @@
 package com.enolj.scheduleproject.service;
 
 import com.enolj.scheduleproject.dto.request.CreateScheduleRequest;
+import com.enolj.scheduleproject.dto.request.DeleteScheduleRequest;
 import com.enolj.scheduleproject.dto.request.UpdateScheduleRequest;
 import com.enolj.scheduleproject.dto.response.CreateScheduleResponse;
 import com.enolj.scheduleproject.dto.response.GetScheduleResponse;
@@ -33,16 +34,27 @@ public class ScheduleService {
     @Transactional
     public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
         Schedule schedule = findById(scheduleId);
-        if (!schedule.matchPassword(request.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        matchPassword(schedule, request.getPassword());
         schedule.update(request);
         return UpdateScheduleResponse.from(schedule);
     }
 
+    @Transactional
+    public void delete(Long scheduleId, DeleteScheduleRequest request) {
+        Schedule schedule = findById(scheduleId);
+        matchPassword(schedule, request.getPassword());
+        scheduleRepository.delete(schedule);
+    }
+
     private Schedule findById(Long scheduleId) {
-        return  scheduleRepository.findById(scheduleId).orElseThrow(
+        return scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalArgumentException("해당 일정이 없습니다.")
         );
+    }
+
+    private void matchPassword(Schedule schedule, String password) {
+        if (!schedule.matchPassword(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

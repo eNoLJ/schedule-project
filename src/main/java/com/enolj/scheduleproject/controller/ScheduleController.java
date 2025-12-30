@@ -1,6 +1,7 @@
 package com.enolj.scheduleproject.controller;
 
 import com.enolj.scheduleproject.dto.request.CreateScheduleRequest;
+import com.enolj.scheduleproject.dto.request.DeleteScheduleRequest;
 import com.enolj.scheduleproject.dto.request.UpdateScheduleRequest;
 import com.enolj.scheduleproject.dto.response.CreateScheduleResponse;
 import com.enolj.scheduleproject.dto.response.GetScheduleResponse;
@@ -33,5 +34,11 @@ public class ScheduleController {
     public ResponseEntity<UpdateScheduleResponse> updateSchedule(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request) {
         UpdateScheduleResponse response = scheduleService.update(scheduleId, request);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/schedules/{scheduleId}")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId, @RequestBody DeleteScheduleRequest request) {
+        scheduleService.delete(scheduleId, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
