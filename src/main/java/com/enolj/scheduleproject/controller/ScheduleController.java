@@ -1,6 +1,7 @@
 package com.enolj.scheduleproject.controller;
 
 import com.enolj.scheduleproject.dto.request.CreateScheduleRequest;
+import com.enolj.scheduleproject.dto.request.UpdateScheduleRequest;
 import com.enolj.scheduleproject.dto.response.CreateScheduleResponse;
 import com.enolj.scheduleproject.dto.response.GetScheduleResponse;
 import com.enolj.scheduleproject.dto.response.UpdateScheduleResponse;
@@ -24,7 +25,13 @@ public class ScheduleController {
 
     @GetMapping("/schedules/{scheduleId}")
     public ResponseEntity<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId) {
-        GetScheduleResponse response = scheduleService.findById(scheduleId);
+        GetScheduleResponse response = scheduleService.getOne(scheduleId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/schedules/{scheduleId}")
+    public ResponseEntity<UpdateScheduleResponse> updateSchedule(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request) {
+        UpdateScheduleResponse response = scheduleService.update(scheduleId, request);
         return ResponseEntity.ok(response);
     }
 }
