@@ -54,6 +54,9 @@ public class ScheduleService {
         Schedule schedule = findById(scheduleId);
         matchPassword(schedule, request.getPassword());
         schedule.update(request);
+
+        // 수정일 반영을 하기 위한 flush()
+        scheduleRepository.flush();
         return UpdateScheduleResponse.from(schedule);
     }
 
