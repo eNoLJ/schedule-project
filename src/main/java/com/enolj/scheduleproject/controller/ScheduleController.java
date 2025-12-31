@@ -4,6 +4,7 @@ import com.enolj.scheduleproject.dto.request.CreateScheduleRequest;
 import com.enolj.scheduleproject.dto.request.DeleteScheduleRequest;
 import com.enolj.scheduleproject.dto.request.UpdateScheduleRequest;
 import com.enolj.scheduleproject.dto.response.CreateScheduleResponse;
+import com.enolj.scheduleproject.dto.response.GetOneScheduleResponse;
 import com.enolj.scheduleproject.dto.response.GetScheduleResponse;
 import com.enolj.scheduleproject.dto.response.UpdateScheduleResponse;
 import com.enolj.scheduleproject.service.ScheduleService;
@@ -33,8 +34,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId) {
-        GetScheduleResponse response = scheduleService.getOne(scheduleId);
+    public ResponseEntity<GetOneScheduleResponse> getSchedule(@PathVariable Long scheduleId) {
+        GetOneScheduleResponse response = scheduleService.getOne(scheduleId);
         return ResponseEntity.ok(response);
     }
 

@@ -3,10 +3,9 @@ package com.enolj.scheduleproject.service;
 import com.enolj.scheduleproject.dto.request.CreateScheduleRequest;
 import com.enolj.scheduleproject.dto.request.DeleteScheduleRequest;
 import com.enolj.scheduleproject.dto.request.UpdateScheduleRequest;
-import com.enolj.scheduleproject.dto.response.CreateScheduleResponse;
-import com.enolj.scheduleproject.dto.response.GetScheduleResponse;
-import com.enolj.scheduleproject.dto.response.UpdateScheduleResponse;
+import com.enolj.scheduleproject.dto.response.*;
 import com.enolj.scheduleproject.entity.Schedule;
+import com.enolj.scheduleproject.repository.CommentRepository;
 import com.enolj.scheduleproject.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
@@ -41,9 +41,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetScheduleResponse getOne(Long scheduleId) {
+    public GetOneScheduleResponse getOne(Long scheduleId) {
         Schedule schedule = findById(scheduleId);
-        return GetScheduleResponse.from(schedule);
+        List<GetCommentResponse> comments = commentRepository.findAllByScheduleId(scheduleId).stream()
+                .map(GetCommentResponse::from)
+                .toList();
+        return GetOneScheduleResponse.from(schedule, comments);
     }
 
     @Transactional
