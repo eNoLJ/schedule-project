@@ -30,14 +30,11 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public List<GetScheduleResponse> getAll(String author) {
-        if (author == null) {
-            return scheduleRepository.findAll().stream()
-                    .map(GetScheduleResponse::from)
-                    .sorted(Comparator.comparing(GetScheduleResponse::getModifiedAt).reversed())
-                    .toList();
-        }
+        List<Schedule> schedules = (author == null)
+                ?  scheduleRepository.findAll()
+                : scheduleRepository.findAllByAuthor(author);
 
-        return scheduleRepository.findAllByAuthor(author).stream()
+        return schedules.stream()
                 .map(GetScheduleResponse::from)
                 .sorted(Comparator.comparing(GetScheduleResponse::getModifiedAt).reversed())
                 .toList();
