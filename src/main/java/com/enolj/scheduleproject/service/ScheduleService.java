@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -23,6 +26,21 @@ public class ScheduleService {
         Schedule schedule = Schedule.from(request);
         scheduleRepository.save(schedule);
         return CreateScheduleResponse.from(schedule);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetScheduleResponse> getAll(String author) {
+        if (author == null) {
+            return scheduleRepository.findAll().stream()
+                    .map(GetScheduleResponse::from)
+                    .sorted(Comparator.comparing(GetScheduleResponse::getModifiedAt).reversed())
+                    .toList();
+        }
+
+        return scheduleRepository.findAllByAuthor(author).stream()
+                .map(GetScheduleResponse::from)
+                .sorted(Comparator.comparing(GetScheduleResponse::getModifiedAt).reversed())
+                .toList();
     }
 
     @Transactional(readOnly = true)
